@@ -1,0 +1,20 @@
+sudo: required
+services:
+    - docker
+
+before_install:
+    - docker build -t betamark/react-test -f ./client/Dockerfile.dev ./client
+
+scripts:
+    - docker run -e CI=true betamark/react-test npm test
+    
+after_success:
+    - docker build -t betamark/complex-dock-client ./client
+    - docker build -t betamark/complex-dock-nginx ./nginx
+    - docker build -t betamark/complex-dock-server ./server
+    - docker build -t betamark/complex-dock-worker ./worker
+    - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+    - docker push betamark/complex-dock-client
+    - docker push betamark/complex-dock-nginx
+    - docker push betamark/complex-dock-server
+    - docker push betamark/complex-dock-worker 
