@@ -18,3 +18,15 @@ after_success:
     - docker push betamark/complex-dock-nginx
     - docker push betamark/complex-dock-server
     - docker push betamark/complex-dock-worker 
+
+deploy:
+    provider: elasticbeanstalk
+    region: ap-southeast-2
+    app: complex-doc
+    env: ComplexDoc-env
+    bucket_name: elasticbeanstalk-ap-southeast-2-078120231226
+    bucket_path: complex-dock
+    on:
+        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
